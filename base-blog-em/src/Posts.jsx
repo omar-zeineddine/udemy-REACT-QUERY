@@ -19,7 +19,9 @@ export function Posts() {
   // const data = [];
 
   // useQuery hook, with key, async fetch function
-  const { data, isLoading, isError, error } = useQuery("posts", fetchPosts);
+  const { data, isLoading, isError, error } = useQuery("posts", fetchPosts, {
+    staleTime: 2000,
+  });
 
   // note isLoading vs isFetching (pagination example)
   // isFetching async query function hasn't yet resolved
