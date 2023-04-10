@@ -26,14 +26,27 @@ async function updatePost(postId) {
 export function PostDetail({ post }) {
   // replace with useQuery
   // const data = [];
+
+  /* 
+    pass array for query key, not just a string
+    treat query key as dependency array, when key changes => create a new query
+  */
   const { isLoading, isError, error, data } = useQuery(
     ["comments", post.id],
+
+    /* 
+      comments won't refresh for different posts until query key is given
+      data for queries with known keys is re-fetched only upon trigger
+      example triggers: (component remount, window refocus, refetch function, automated refetch, query invalidation after mutation) 
+    */
+
     () => fetchComments(post.id)
   );
 
   console.log({ data, isError, isLoading });
 
   if (isLoading) return <div>Loading...</div>;
+
   if (isError)
     return (
       <>
