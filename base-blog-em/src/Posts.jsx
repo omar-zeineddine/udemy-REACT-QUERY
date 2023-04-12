@@ -30,20 +30,23 @@ export function Posts() {
   // const data = [];
 
   // useQuery hook, with key, async fetch function
-  const { data, isLoading, isError, error } = useQuery(
+  const { data, isLoading, isFetching, isError, error } = useQuery(
     ["posts", currentPage],
     () => fetchPosts(currentPage),
     {
-      staleTime: 500,
+      staleTime: 1500,
       keepPreviousData: true,
     }
   );
 
-  // note isLoading vs isFetching (pagination example)
-  // isFetching async query function hasn't yet resolved
-  // isLoading is a subset of isFetching, fetching and no cached data
-
+  /* 
+    (isLoading is a subset of isFetching)
+    isFetching: async query function hasn't resolved yet
+    isLoading: no cached data, + isFetching
+  */
   if (isLoading) return <h3>Loading...</h3>;
+  // if (isFetching) return <h3>Fetching in progress...</h3>;
+
   if (isError)
     return (
       <>
