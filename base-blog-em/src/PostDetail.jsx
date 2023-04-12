@@ -47,6 +47,8 @@ export function PostDetail({ post }) {
   // no query key (not associated with data in cache)
   const deleteMutation = useMutation((postId) => deletePost(postId));
 
+  const updateMutation = useMutation((postId) => updatePost(postId));
+
   console.log({ data, isError, isLoading });
 
   if (isLoading) return <div>Loading...</div>;
@@ -72,7 +74,16 @@ export function PostDetail({ post }) {
       {deleteMutation.isSuccess && (
         <p style={{ color: "green" }}>Post has (not) been deleted</p>
       )}
-      <button>Update title</button>
+      <button onClick={() => updateMutation.mutate(post.id)}>
+        Update title
+      </button>
+      {updateMutation.isLoading && <p style={{ color: "purple" }}>updating</p>}
+      {updateMutation.isError && (
+        <p style={{ color: "red" }}>post update failed</p>
+      )}
+      {updateMutation.isSuccess && (
+        <p style={{ color: "green" }}>post updated</p>
+      )}
       <p>{post.body}</p>
       <h4>Comments</h4>
       {data?.map((comment) => (
