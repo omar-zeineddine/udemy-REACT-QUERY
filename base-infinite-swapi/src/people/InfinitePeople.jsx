@@ -22,12 +22,33 @@ export function InfinitePeople() {
     queryKey: sw-people
     queryFunction: fed an object parameter that has pageParam as one of the properties  
    */
-  const { data, fetchNextPage, hasNextPage } = useInfiniteQuery(
-    "sw-people",
-    ({ pageParam = initialUrl }) => fetchUrl(pageParam),
-    {
-      getNextPageParam: (lastPage) => lastPage.next || undefined,
-    }
+  const { data, fetchNextPage, hasNextPage, isLoading, isError, error } =
+    useInfiniteQuery(
+      // version 4 of react-query, queryKey needs to be an array.
+      ["sw-people"],
+      ({ pageParam = initialUrl }) => fetchUrl(pageParam),
+      {
+        getNextPageParam: (lastPage) => lastPage.next || undefined,
+      }
+    );
+
+  if (isLoading) return <div className="loading">Loading...</div>;
+  if (isError) return <div>Error! {error.toString()}</div>;
+
+  return (
+    <InfiniteScroll loadMore={fetchNextPage} hasMore={hasNextPage}>
+      {data.pages.map((pageData) => {
+        return pageData.results.map((person) => {
+          return (
+            <Person
+              key={person.name}
+              name={person.name}
+              hairColor={person.hair_color}
+              eyeColor={person.hair_color}
+            />
+          );
+        });
+      })}
+    </InfiniteScroll>
   );
-  return <InfiniteScroll />;
 }
